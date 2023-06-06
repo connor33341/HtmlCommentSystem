@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebCommentSystem</title>
+    </head>
+    <body>
+        <h1>WebCommentSystem</h1>
+        <table id="table">
+            <tr><th>Name</th><th>Message</th></tr>
+        </table>
+        <form action="/submit" method="post">
+            <label for="username">Name:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="message">Message:</label>
+            <input type="text" id="message" name="message" required><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <script>
+            const table = document.getElementById("table")
+            function run(){
+                var xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function(){
+                    if (xhr.readyState === 4 && xhr.status === 200){
+                        var response = xhr.responseText
+                        var parsedData = JSON.parse(response)
+                        var data = Object.entries(parsedData)
+                        for (let index in data){
+                            var object = data[index]
+                            var objectData = object[1]
+                            var name = objectData[0]
+                            var message = objectData[1]
+                            table.innerHTML = table.innerHTML + "<tr><td>"+name+"</td><td>"+message+"</td></tr>"
+                        }
+                        console.log(response)
+                    }
+                }
+                xhr.open("GET","/load")
+                xhr.send()
+            }
+            run()
+        </script>
+    </body>
+</html>
